@@ -103,6 +103,9 @@ alias -g cat='bat --paging=never'
 # ----- man(pages), but with color -----
 alias -g man='batman'
 
+# ----- dig(DNS), but with color -----
+alias -g dig='dog'
+
 # NOTE: three replacement commands are *NOT* shadowed here
 #       they take different syntax
 #       'rg' (ripgrep) mostly replaces 'grep', but has different syntax
