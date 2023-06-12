@@ -10,9 +10,9 @@ vim.opt.relativenumber = true
 -- general
 lvim.log.level = "info"
 lvim.format_on_save = {
-  enabled = true,
-  pattern = "*.lua",
-  timeout = 1000,
+	enabled = true,
+	pattern = "*.lua",
+	timeout = 1000,
 }
 -- to disable icons and use a minimalist setup, uncomment the following
 -- lvim.use_icons = false
@@ -46,27 +46,27 @@ lvim.builtin.treesitter.auto_install = true
 -- lvim.builtin.treesitter.ignore_install = { "haskell" }
 
 -- -- always installed on startup, useful for parsers without a strict filetype
--- lvim.builtin.treesitter.ensure_installed = { "comment", "markdown_inline", "regex" }
+lvim.builtin.treesitter.ensure_installed = { "comment", "markdown_inline", "regex" }
 
 -- -- generic LSP settings <https://www.lunarvim.org/docs/configuration/language-features/language-servers>
 
 -- --- disable automatic installation of servers
 -- lvim.lsp.installer.setup.automatic_installation = false
 
--- ---configure a server manually. IMPORTANT: Requires `:LvimCacheReset` to take effect
--- ---see the full default list `:lua =lvim.lsp.automatic_configuration.skipped_servers`
+---configure a server manually. IMPORTANT: Requires `:LvimCacheReset` to take effect
+---see the full default list `:lua =lvim.lsp.automatic_configuration.skipped_servers`
 -- vim.list_extend(lvim.lsp.automatic_configuration.skipped_servers, { "pyright" })
 -- local opts = {} -- check the lspconfig documentation for a list of all possible options
 -- require("lvim.lsp.manager").setup("pyright", opts)
 
--- ---remove a server from the skipped list, e.g. eslint, or emmet_ls. IMPORTANT: Requires `:LvimCacheReset` to take effect
--- ---`:LvimInfo` lists which server(s) are skipped for the current filetype
+---remove a server from the skipped list, e.g. eslint, or emmet_ls. IMPORTANT: Requires `:LvimCacheReset` to take effect
+---`:LvimInfo` lists which server(s) are skipped for the current filetype
 -- lvim.lsp.automatic_configuration.skipped_servers = vim.tbl_filter(function(server)
---   return server ~= "emmet_ls"
+-- 	return server ~= "ruby-ls"
 -- end, lvim.lsp.automatic_configuration.skipped_servers)
 
--- -- you can set a custom on_attach function that will be used for all the language servers
--- -- See <https://github.com/neovim/nvim-lspconfig#keybindings-and-completion>
+-- you can set a custom on_attach function that will be used for all the language servers
+-- See <https://github.com/neovim/nvim-lspconfig#keybindings-and-completion>
 -- lvim.lsp.on_attach_callback = function(client, bufnr)
 --   local function buf_set_option(...)
 --     vim.api.nvim_buf_set_option(bufnr, ...)
@@ -102,41 +102,37 @@ lvim.builtin.treesitter.auto_install = true
 --   },
 -- }
 
-local formatters = require "lvim.lsp.null-ls.formatters"
-formatters.setup {
-  { name = "black" },
-  {
-    name = "prettier",
-    ---@usage arguments to pass to the formatter
-    -- these cannot contain whitespace
-    -- options such as `--line-width 80` become either `{"--line-width", "80"}` or `{"--line-width=80"}`
-    args = { "--print-width", "100" },
-    ---@usage only start in these filetypes, by default it will attach to all filetypes it supports
-    filetypes = { "typescript", "typescriptreact" },
-  },
-}
+local formatters = require("lvim.lsp.null-ls.formatters")
+formatters.setup({
+	{ command = "stylua", filetypes = { "lua" } },
+	{ command = "shfmt", filetypes = { "sh", "zsh" } },
+	{ command = "prettier", filetypes = { "css", "javascript", "javascriptreact", "typescript", "typescriptreact" } },
+	{ command = "black", filetypes = { "python" } },
+	{ command = "rubocop", filetypes = { "ruby" } },
+})
 
-local linters = require "lvim.lsp.null-ls.linters"
-linters.setup {
-  { name = "flake8" },
-  {
-    name = "shellcheck",
-    args = { "--severity", "warning" },
-  },
-}
+local linters = require("lvim.lsp.null-ls.linters")
+linters.setup({
+	{ command = "rubocop", filetypes = { "ruby" } },
+	{ name = "flake8" },
+	{
+		name = "shellcheck",
+		args = { "--severity", "warning" },
+	},
+})
 
-local code_actions = require "lvim.lsp.null-ls.code_actions"
-code_actions.setup {
-  {
-    name = "proselint",
-  },
-}
+local code_actions = require("lvim.lsp.null-ls.code_actions")
+code_actions.setup({
+	{
+		name = "proselint",
+	},
+})
 -- Additional Plugins <https://www.lunarvim.org/docs/configuration/plugins/user-plugins>
 lvim.plugins = {
-  {
-    "folke/trouble.nvim",
-    cmd = "TroubleToggle",
-  },
+	{
+		"folke/trouble.nvim",
+		cmd = "TroubleToggle",
+	},
 }
 
 -- -- Autocommands (`:help autocmd`) <https://neovim.io/doc/user/autocmd.html>

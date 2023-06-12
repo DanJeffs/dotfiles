@@ -44,3 +44,10 @@
 [user]
 	email = danieljeffs83@gmail.com
 	name = DanJeffs
+[difftool]
+    prompt = true
+[diff]
+    tool = nvimdiff
+    colorMoved = default
+[difftool "nvimdiff"]
+    cmd = "nvim -d \"$LOCAL\" \"$REMOTE\""
