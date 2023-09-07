@@ -45,7 +45,6 @@ export PATH="/opt/homebrew/opt/openjdk/bin:$PATH"
 
 export PATH=/Users/djeffs/.local/bin:$PATH
 
-export PD_API_KEY=u+Sr7yQstAdm9gNzsr-w
 
 # ########################## --Environment Sourcing-- ###################### #
 # NOTE: "." is posix ~= of "source"
