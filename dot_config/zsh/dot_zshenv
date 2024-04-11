@@ -1,0 +1,47 @@
+# ~~~~~~~~ --order of sourcing-- ~~~~~~~~ #
+# (ignoring /etc/* files)
+# $ZDOTDIR/.zshenv
+# $ZDOTDIR/.zprofile <-- XOR .zlogin  (by intention, but not enforced)
+# $ZDOTDIR/.zshrc
+# $ZDOTDIR/.zlogin  <-- XOR .zprofile  (by intention, but not enforced)
+# $ZDOTDIR/.zlogout
+#
+# NOTES: env: sourced each shell
+#        rc: sourced each *interactive* shell
+#        profile|x|login : sourced each *login* shell
+#                           login-shells often not opened in linux, but
+#                           opened with each new window or tab in macOS
+#
+
+
+# ########################## --Path Exports-- ###################### #
+# ----------- ZSH -----------
+export ZDOTDIR=$HOME/.config/zsh
+export HISTFILE=$HOME/.zsh_history
+# sets the xsh_history file in its typical location, preventing it from
+# being placed in our git versioned  ZSH/ directory (due to $ZDOTDIR setting in .zshenv)
+
+# ----------- starship (terminal prompt) -----------
+# export STARSHIP_CONFIG=$HOME/.config/starship/starship.toml
+
+# ----------- git -----------
+export GIT_CONFIG_GLOBAL=$HOME/.config/git_global/.gitconfig
+# "git_config_(global/system)":
+#       "..._global"" is for user (usually in "$HOME/...")
+#       "..._system" is for system/computer (usually in "/etc/...")
+
+# ----------- Go -----------
+# note: these came up when trying to make the PagerDuty-Terraform Provider
+export GOPATH=$HOME/go
+export PATH=$PATH:$GOPATH
+export PATH=$PATH:$GOPATH/bin
+
+# ----------- Rust -----------
+export PATH=$PATH:$HOME/.cargo/bin
+
+
+# ----------- Openjdk -----------
+export PATH="/opt/homebrew/opt/openjdk/bin:$PATH"
+
+
+export PATH=/Users/djeffs/.local/bin:$PATH
