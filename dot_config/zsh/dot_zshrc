@@ -214,6 +214,7 @@ alias ci='zi'
 # # as-needed-loading, without alias expansion and in in zsh-style, of comp(letion)init
 FPATH="$(brew --prefix)/share/zsh/site-functions:${FPATH}"
 fpath=(${ASDF_DIR}/completions $fpath)
+fpath=(~/.zfunc/ $fpath)
 autoload -Uz compinit
 compinit
 
@@ -266,19 +267,19 @@ command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
 eval "$(pyenv init -)"
 
 # OKTA
-export AWS_OKTA_MFA_DUO_DEVICE=token
+# export AWS_OKTA_MFA_DUO_DEVICE=token
 
 # ----------- PagerDuty -----------
 #export PD_API_KEY=op://ENVVARS/ENV_VARS/PD_API_KEY
-export PD_API_KEY_US2="op://ENVVARS/ENV_VARS/PD_API_KEY_US2"
+# export PD_API_KEY_US2="op://ENVVARS/ENV_VARS/PD_API_KEY_US2"
 # ----------- AWS -----------
-export AWS_ACCESS_KEY_ID="op://ENVVARS/ENV_VARS/AWS_ACCESS_KEY_ID"
-export AWS_SECRET_ACCESS_KEY="op://ENVVARS/ENV_VARS/AWS_SECRET_ACCESS_KEY"
+# export AWS_ACCESS_KEY_ID="op://ENVVARS/ENV_VARS/AWS_ACCESS_KEY_ID"
+# export AWS_SECRET_ACCESS_KEY="op://ENVVARS/ENV_VARS/AWS_SECRET_ACCESS_KEY"
 
-function pd_api_key() {
-  op read op://ENVVARS/ENV_VARS/PD_API_KEY;
-}
-export PD_API_KEY=$(pd_api_key)
+# function pd_api_key() {
+  # op read op://ENVVARS/ENV_VARS/PD_API_KEY;
+# }
+# export PD_API_KEY=$(pd_api_key)
 
 ## https://developer.1password.com/docs/cli/secret-references
 ## use 'op run --' to run a command with secrets
