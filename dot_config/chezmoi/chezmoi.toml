@@ -1,0 +1,9 @@
+sourceDir = "~/.dotfiles"
+
+[edit]
+    command = "code"
+    args = ["--wait"]
+
+[diff]
+    command = "code"
+    args = ["--diff", "{{ .Destination }}", "{{ .Target }}"]
