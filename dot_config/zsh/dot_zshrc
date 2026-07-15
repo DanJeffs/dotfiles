@@ -1,0 +1,176 @@
+# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.config/zsh/.zshrc.
+# Initialization code that may require console input (password prompts, [y/n]
+# confirmations, etc.) must go above this block; everything else may go below.
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
+
+#cz test 
+
+# ~~~~~~~~ --order of sourcing-- ~~~~~~~~ #
+# (ignoring /etc/* files)
+# $ZDOTDIR/.zshenv
+# $ZDOTDIR/.zprofile <-- XOR .zlogin  (by intention, but not enforced)
+# $ZDOTDIR/.zshrc
+# $ZDOTDIR/.zlogin  <-- XOR .zprofile  (by intention, but not enforced)
+# $ZDOTDIR/.zlogout
+#
+# NOTES: env: sourced each shell
+#        rc: sourced each *interactive* shell
+#        profile|x|login : sourced each *login* shell
+#                           login-shells often not opened in linux, but
+#                           opened with each new window or tab in macOS
+
+# ~~~~~~~~ --useful documentation-- ~~~~~~~~ #
+# Man-page with a ton of ZSH info:
+#   'man zshcontrib'
+# Man-page with many (not all) ZSH options:
+#   'man zshoptions'
+
+# while this did not directly contribute to much here due to timing
+# the following website deserves special mention:
+#   https://thevaluable.dev/zsh-install-configure-mouseless/
+
+# Powerlevel10k theme
+source $HOMEBREW_PREFIX/share/powerlevel10k/powerlevel10k.zsh-theme
+typeset -g POWERLEVEL9K_INSTANT_PROMPT=quiet
+
+# ~~~~~~~~ --Homebrew-- ~~~~~~~~ #
+export HOMEBREW_BUNDLE_FILE=~/.config/.brewfile
+export HOMEBREW_NO_AUTO_UPDATE=1
+
+
+# ############################ --ZSH Stuff-- ######################## #
+# sets the zsh_history file in its typical location, preventing it from
+# being placed in our git versioned  ZSH/ directory (due to $ZDOTDIR setting in .zshenv)
+# this is principally as a backup defense (on top of gitignore) against accidentally
+# synching terminal history (and possibly sensitive data)
+# NOTE: also in .zshenv
+export HISTFILE=$HOME/.zsh_history
+export SAVEHIST=999999000  # deduplicated history size
+export HISTSIZE=999999999  # non-deduplicated history size
+# HISTSIZE - SAVEHIST = number of non-deduplicated lines kept in history
+# in our case: diff = 999
+
+export CC="/usr/bin/gcc -I$(brew --prefix unixodbc)/include"
+export LDFLAGS="-L$(brew --prefix unixodbc)/lib"
+
+# ######################### --ZSH Options --############################ #
+# SHOW: 'setopt' <-- shows currently set options
+# SEE: 'man zshoptions'
+
+# set cd'ing with just directory names typed in
+setopt auto_cd
+
+# try to correct command and all arguments on line
+setopt correct_all
+export CORRECT_IGNORE_FILE='.vim|.nvim|.git'
+
+# all cd actions add last location to a stack (can used 'popd' to de-stack and travel to location)
+setopt auto_pushd
+
+# enable vi mode, increase visual responsiveness, load cursor change code
+
+source ~/.config/zsh/sources/enhanced-vimode-setup.zsh
+
+# default editor
+# "VISUAL" and "EDITOR" usually substitutable, best to set both to same
+export EDITOR='nvim'
+export VISUAL='nvim'
+# alternatives: vim, nvim, helix
+
+#Source functions file
+source ~/.config/zsh/sources/functions.zsh
+
+#Source aliases file
+source ~/.config/zsh/sources/aliases.zsh
+
+#        ----Completions----
+# brew folder important to adding completions:
+#. /opt/homebrew/share/zsh/site-functions
+# # as-needed-loading, without alias expansion and in in zsh-style, of comp(letion)init
+FPATH="$(brew --prefix)/share/zsh/site-functions:${FPATH}"
+
+# asdf completions
+fpath=(${ASDF_DIR}/completions $fpath)
+
+# Performance optimizations
+# Compile zcompdump if modified, to increase startup speed
+autoload -Uz compinit
+if [[ -n ~/.zcompdump(#qN.mh+24) ]]; then
+  compinit -u
+  touch ~/.zcompdump
+else
+  compinit -C -u
+fi
+
+# Cache expensive completions
+zstyle ':completion:*' use-cache on
+zstyle ':completion:*' cache-path ~/.zsh/cache
+
+# zsh plugins (must be after compinit)
+source $HOMEBREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+source $HOMEBREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+
+### Completion configuration
+zstyle ':completion:*' special-dirs true
+zstyle ':completion:*' menu select
+zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' # Case insensitive completion
+
+# 1Pass Shell-completion
+eval "$(op completion zsh)"; compdef _op op
+
+# ############################# --fzf-- ################################ #
+# fzf is amazing, but uncharacteristically ...wide for a terminal app
+# below are multiple defaults that apply to various ways of calling
+# the underlying functionality.
+#
+# So, for organizational purposes, we've moved it to it's own file.
+# Which we simply source here. :)
+source ~/.config/zsh/sources/fzf-call-settings.zsh
+
+# ########################### --Credentials-- ########################## #
+# a file stored separately to store credentials and API keys such as those for github access.
+# source $HOME/.cred/shcred
+
+# To customize prompt, run `p10k configure` or edit ~/.config/zsh/.p10k.zsh.
+[[ ! -f ~/.config/zsh/.p10k.zsh ]] || source ~/.config/zsh/.p10k.zsh
+
+
+#nvim
+export PATH=$PATH:~/nvim-macos/bin
+# pyenv stuff
+export PYENV_ROOT="$HOME/.pyenv"
+command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
+eval "$(pyenv init -)"
+
+# OKTA
+# export AWS_OKTA_MFA_DUO_DEVICE=token
+
+# ----------- PagerDuty -----------
+#export PD_API_KEY=op://ENVVARS/ENV_VARS/PD_API_KEY
+# export PD_API_KEY_US2="op://ENVVARS/ENV_VARS/PD_API_KEY_US2"
+# ----------- AWS -----------
+# export AWS_ACCESS_KEY_ID="op://ENVVARS/ENV_VARS/AWS_ACCESS_KEY_ID"
+# export AWS_SECRET_ACCESS_KEY="op://ENVVARS/ENV_VARS/AWS_SECRET_ACCESS_KEY"
+
+# function pd_api_key() {
+  # op read op://ENVVARS/ENV_VARS/PD_API_KEY;
+# }
+# export PD_API_KEY=$(pd_api_key)
+
+## https://developer.1password.com/docs/cli/secret-references
+## use 'op run --' to run a command with secrets
+## ie. 'op run -- env' will print out the environment variables
+## and 'op run -- echo $PD_API_KEY' will print out the value of the secret
+
+#ASDF
+#. /opt/homebrew/opt/asdf/libexec/asdf.sh
+
+# Lazy-load asdf for faster shell startup
+asdf() {
+  unfunction asdf
+  . $HOMEBREW_PREFIX/opt/asdf/libexec/asdf.sh
+  asdf "$@"
+}
+export PATH="$HOME/.local/bin:${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"

@@ -1,0 +1,71 @@
+tap "eth-p/software"
+tap "hashicorp/tap"
+tap "pagerduty/pd_brews", "https://github.com/PagerDuty/homebrew-pd_brews"
+tap "wezterm/wezterm", "https://github.com/wezterm/homebrew-wezterm.git"
+# Extendable version manager with support for Ruby, Node.js, Erlang & more
+brew "asdf"
+# Official Amazon AWS command-line interface
+brew "awscli"
+# Clone of cat(1) with syntax highlighting and Git integration
+brew "bat"
+# Manage your dotfiles across multiple diverse machines, securely
+brew "chezmoi"
+# Human-friendly and fast alternative to cut and (sometimes) awk
+brew "choose-rust"
+# GNU File, Shell, and Text utilities
+brew "coreutils"
+# Get a file from an HTTP, HTTPS or FTP server
+brew "curl"
+# Command-line DNS Client for Humans
+brew "doggo"
+# Simple, fast and user-friendly alternative to find
+brew "fd"
+# Command-line fuzzy finder written in Go
+brew "fzf"
+# GitHub command-line tool
+brew "gh"
+# Distributed revision control system
+brew "git"
+# Syntax-highlighting pager for git and diff output
+brew "git-delta"
+# Lightweight and flexible command-line JSON processor
+brew "jq"
+# Interactive cheatsheet tool for the command-line
+brew "navi"
+# Python version management
+brew "pyenv"
+# Search tool like grep and The Silver Searcher
+brew "ripgrep"
+# Powerful, clean, object-oriented scripting language
+brew "ruby", link: false
+# Intuitive find & replace CLI
+brew "sd"
+# Very fast implementation of tldr in Rust
+brew "tealdeer"
+# Command-line unarchiving tools supporting multiple formats
+brew "unar"
+# Simple terminal image viewer written in Rust
+brew "viu"
+# Shell extension to navigate your filesystem faster
+brew "zoxide"
+# Fish-like fast/unobtrusive autosuggestions for zsh
+brew "zsh-autosuggestions"
+# Fish shell like syntax highlighting for zsh
+brew "zsh-syntax-highlighting"
+# Command-line interface for 1Password
+cask "1password-cli"
+
+brew "lazygit"
+brew "neovim"
+brew "stylua"
+
+# Terminal-based AI coding assistant
+cask "claude-code"
+# Open Source Multimedia Framework
+cask "gstreamer-runtime"
+# GPU-accelerated cross-platform terminal emulator and multiplexer
+cask "wezterm"
+# Compatibility layer to run Windows applications
+cask "wine-stable"
+cargo "eza"
+cargo "scrubcsv"
