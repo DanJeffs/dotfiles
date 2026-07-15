@@ -43,5 +43,7 @@ export PATH=$PATH:$HOME/.cargo/bin
 # ----------- Openjdk -----------
 export PATH="/opt/homebrew/opt/openjdk/bin:$PATH"
 
+# ----------- Ruby -----------
+export PATH="/opt/homebrew/opt/ruby/bin:$PATH"
 
 export PATH=/Users/djeffs/.local/bin:$PATH

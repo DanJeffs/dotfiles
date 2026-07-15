@@ -5,6 +5,8 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
+#cz test 
+
 # ~~~~~~~~ --order of sourcing-- ~~~~~~~~ #
 # (ignoring /etc/* files)
 # $ZDOTDIR/.zshenv
@@ -28,6 +30,14 @@ fi
 # while this did not directly contribute to much here due to timing
 # the following website deserves special mention:
 #   https://thevaluable.dev/zsh-install-configure-mouseless/
+
+# Powerlevel10k theme
+source $HOMEBREW_PREFIX/share/powerlevel10k/powerlevel10k.zsh-theme
+typeset -g POWERLEVEL9K_INSTANT_PROMPT=quiet
+
+# ~~~~~~~~ --Homebrew-- ~~~~~~~~ #
+export HOMEBREW_BUNDLE_FILE=~/.config/.brewfile
+export HOMEBREW_NO_AUTO_UPDATE=1
 
 
 # ############################ --ZSH Stuff-- ######################## #
@@ -72,151 +82,40 @@ export VISUAL='nvim'
 #Source functions file
 source ~/.config/zsh/sources/functions.zsh
 
+#Source aliases file
+source ~/.config/zsh/sources/aliases.zsh
 
-# ########################### --Aliases-- ############################## #
-# ¡NOTE!:  'alias -g ...' allows alias to work even if not first word in command
-#           e.g. say    'al='alias'
-#                then   > al  ~~> > alias
-#                       > fd whatever | al ~~> fd whatever | alias
-#                BUT    > sudo al  ~~> sudo al     <-- no expansion
-#                       > echo al ~~> echo al      <-- no expansion
-#               this can be corrected by globaling the alias, with the caveat
-#               that that letter word will *always* expand
-#
-#  SEE: `which <alias>` to find what something is aliased to
-
-# ----------- shadow aliases (WoooOOOooo) -----------
-# I'm including these aliases for simplicity of adoption and to assist
-# with learning classic terminal commands
-# I also have non-shadowed versions below
-# feel free (as with everything) to remove or adjust the following
-
-# ----- ls series, but with color -----
-# clasic ls, list view ll, and then an alias for tree also offered as 'lt'
-# NOTE: I have included '--all' ('-a') for all of the ls series
-#       that is not default behavior, but shows "hidden" files by default
-#       and will help when exploring the systems we're using.
-alias -g ls='exa --all'
-alias -g ll='exa --all --long'
-alias -g lt='exa --all --tree --level=3'
-alias -g tree='exa --all --tree --level=6'
-
-# ----- cat, but with color -----
-alias -g cat='bat --paging=never'
-
-# ----- man(pages), but with color -----
-alias -g man='batman'
-
-# ----- dig(DNS), but with color -----
-alias -g dig='dog'
-
-# NOTE: three replacement commands are *NOT* shadowed here
-#       they take different syntax
-#       'rg' (ripgrep) mostly replaces 'grep', but has different syntax
-#       'c'/'z' (zoxide) mostly replace 'cd', but fuzzy corrects to closest visisted dir
-#       'fd' mostly replaces 'find', but has different syntax
-#       (and not included as defaults in our repo, but 'sd' vs 'sed': same deal)
-# ---------------------------
-
-# ----------- git -----------
-# git ~~()~~> "g"
-# NOTE: similar, but different aliasing can be set in '.gitconfig'
-#       those aliases are for the arguments that *follow* the 'git ' command
-
-alias g='git'
-
-alias ga='git add'
-alias gau='git add --update'  # git add all tracked && updated files
-alias grs='git restore --staged'  # un-stage files *specified*
-alias gkh='git checkout HEAD'  # return files to last commit state (¡does not preserve changes as unstaged!)
-
-alias gb='git branch'  # git list all branches if no further elaboration
-alias gba='git branch --all'  # also list remote branches
-alias gk='git checkout'
-
-alias gc='git commit'
-alias gcm='git commit --message'  # git commit along with commit message on line
-
-alias gd='git diff'
-alias gds='git diff --staged'
-
-alias gf='git fetch'
-
-alias glg='git log --all --decorate --oneline --graph'  # commit graph
-
-alias gm='git merge'
-
-alias gpush='git push'  # minimally abbreviated due to similarity to 'git pull'
-alias gpull='git pull'
-
-alias grem='git remote'
-alias gremv='git remote --verbose'
-
-alias gs='git status'
-
-alias gt='git ls-tree' # give content info about a git work-tree
-
-# ----------- neovim -----------
-# nvim ~~()~~> "nn" Note: "nm" is a prexisting keyword AND 'nn' is apropos
-alias nn='nvim'
-alias nn.='nvim .'
-# alias nvim='lvim'
-# alias nn='nvim'
-alias vimdiff='nvim -d'
-# # neovide --multigrid ~~()~~> "nv"
-# alias nv='neovide --multigrid'  # neovide is a GUI application for neovim
-
-# ----------- varied -----------
-# batman ~~()~~> "mab"
-alias mab='batman'
-
-# exa ~~()~~> "e"_fam  (~= "ls"_fam)
-alias es='exa --all --classify  --icons --sort="type"'
-alias el='exa --long --numeric --all --classify --header --icons --sort="type" --time-style="long-iso"'
-alias et='exa --tree --all --ignore-glob=".git" --icons --sort="type" --level=3'  # tree: max_depth 3
-alias etall='exa --tree --all --ignore-glob=".git" --icons --sort="type"'         # tree: unlimited depth
-
-# ---------- chezmoi -----------
-alias cz='chezmoi'
-
-# fzf... ~~()~~> "fzf"
-# NOTE: fzf is involved enough to have its own file.
-#       See the "--fzf--" section (below) for source reference.
-#       Defined in that source file:
-# alias -g fzf --<with bat preview>
-#
-# fd_hidden ~~()~~> "fdh"
-alias fdh='fd --exclude="'"{.git,.venv}"'" --hidden'  # iclude hidden minus common noise
-# NOTE:          ^ this takes a *glob* pattern, not a regex pattern
-#
-# [ripgrep] rg... ~~()~~> "rg"
-# '-s' to add case sensitivity back
-alias -g rg='rg --hidden --ignore-case'
-# ^global to prevent silent fall back and subtle confusions that would ensue
-
-# sets up zoxide, which operates as "z"
-# z ~~()~~> "c"  (easier to type and a partial version of "cd", lol)
-eval "$(zoxide init zsh)"
-alias c='z'
-alias ci='zi'
-
-# ~~~~~~~~ --ZSH Completions ~~~~~~~~ #
-# --not using completions, but leaving this here should there be sufficient future interest--
-# --On Why:
-#       arcane, maintenance heavy (new command/new options req changes),
-#       can slow down shell, and, per purposes of this repo,
-#       getting comfortable with  'man xxx' | 'xxx --help' is helpful :) --
-# useful info on completion system:
-#   https://thevaluable.dev/zsh-completion-guide-examples/
-
+#        ----Completions----
 # brew folder important to adding completions:
-. /opt/homebrew/share/zsh/site-functions
+#. /opt/homebrew/share/zsh/site-functions
 # # as-needed-loading, without alias expansion and in in zsh-style, of comp(letion)init
 FPATH="$(brew --prefix)/share/zsh/site-functions:${FPATH}"
+
+# asdf completions
 fpath=(${ASDF_DIR}/completions $fpath)
-fpath=(~/.zfunc/ $fpath)
+
+# Performance optimizations
+# Compile zcompdump if modified, to increase startup speed
 autoload -Uz compinit
-compinit
+if [[ -n ~/.zcompdump(#qN.mh+24) ]]; then
+  compinit -u
+  touch ~/.zcompdump
+else
+  compinit -C -u
+fi
+
+# Cache expensive completions
+zstyle ':completion:*' use-cache on
+zstyle ':completion:*' cache-path ~/.zsh/cache
+
+# zsh plugins (must be after compinit)
+source $HOMEBREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+source $HOMEBREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+
+### Completion configuration
+zstyle ':completion:*' special-dirs true
+zstyle ':completion:*' menu select
+zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' # Case insensitive completion
 
 # 1Pass Shell-completion
 eval "$(op completion zsh)"; compdef _op op
@@ -228,37 +127,16 @@ eval "$(op completion zsh)"; compdef _op op
 #
 # So, for organizational purposes, we've moved it to it's own file.
 # Which we simply source here. :)
-
 source ~/.config/zsh/sources/fzf-call-settings.zsh
-
-
-# ############################ --Prompt-- ############################# #
-# My first prompt :)
-# [leaving it here in case you ever want to go hyper-minimal or
-#  want a cue on tossing a bit of color into another setup without installs]
-#PROMPT="%F{cyan}%n %1~ %# %f"
-
-# Starship.rs initializer (to be at "end" of file, along with the following line)
-#eval "$(starship init zsh)"
-
-#P10k
-source ~/powerlevel10k/powerlevel10k.zsh-theme
-
-
-# ########################### --ZSH Input Mods-- ####################### #
-# NOTE: location may change for a given installation
-#       if in doubt: 'brew reinstall ...' and check the output location
-#       (it should give you an explicit "source ..." line to add)
-source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
-source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
 # ########################### --Credentials-- ########################## #
 # a file stored separately to store credentials and API keys such as those for github access.
-source $HOME/.cred/shcred
+# source $HOME/.cred/shcred
 
 # To customize prompt, run `p10k configure` or edit ~/.config/zsh/.p10k.zsh.
 [[ ! -f ~/.config/zsh/.p10k.zsh ]] || source ~/.config/zsh/.p10k.zsh
-export PATH=$PATH:~/.gem/ruby/2.6.0/bin
+
+
 #nvim
 export PATH=$PATH:~/nvim-macos/bin
 # pyenv stuff
@@ -287,4 +165,12 @@ eval "$(pyenv init -)"
 ## and 'op run -- echo $PD_API_KEY' will print out the value of the secret
 
 #ASDF
-. /opt/homebrew/opt/asdf/libexec/asdf.sh
+#. /opt/homebrew/opt/asdf/libexec/asdf.sh
+
+# Lazy-load asdf for faster shell startup
+asdf() {
+  unfunction asdf
+  . $HOMEBREW_PREFIX/opt/asdf/libexec/asdf.sh
+  asdf "$@"
+}
+export PATH="$HOME/.local/bin:${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"
